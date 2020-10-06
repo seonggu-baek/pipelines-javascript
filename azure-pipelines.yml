@@ -20,16 +20,13 @@ steps:
     npm run build
   displayName: 'npm install and build'
 
-- script: mocha test --reporter mocha-junit-reporter
-
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
+- task: CopyFiles@2
   inputs:
-    testRunner: JUnit
-    testResultsFiles: '**/TEST-RESULTS.xml'
+    Contents: 'build/**' # Pull the build directory (React)
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: PublishCodeCoverageResults@1
+- task: PublishBuildArtifacts@1
   inputs: 
-    codeCoverageTool: Cobertura # or JaCoCo
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+    pathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
+    ArtifactName: 'www' # output artifact named www
+
